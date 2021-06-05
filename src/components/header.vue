@@ -21,11 +21,13 @@ export default {
 <style lang="scss">
     .navbar{
         display: flex;
+        overflow: hidden;
         border-bottom: 1px solid gray;
         padding: .5rem 4.5rem;
         justify-content: space-between;
         align-items: center;
-        height: 3rem;
+        height: 4rem;
+        background-color: #1C213E;
         .logo{
             width: 4rem;
             img{

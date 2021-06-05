@@ -1,6 +1,6 @@
 <template>
     <div class="card">
-        <router-link tag="a" class="project-link" :to="link(id)" ></router-link>
+        <router-link tag="div" class="project-link" :to="link(id)" ></router-link>
         <div class="card-img">
             <div class="overlay"></div>
             <div class="image">
@@ -34,16 +34,16 @@ export default {
 
 <style lang="scss">
     .card{
+        background: #1C213E;
         max-width: 20rem;
         box-shadow: none;
         border-radius: 1.2rem;
         overflow: hidden;
-        border: .5px solid #ccc;
         margin: auto;
         transition: all .3s ease-in;
         position: relative;
         &:hover{
-            box-shadow: #d2d2d2 0px 8px 12px;
+            box-shadow: #d2d2d2 1px 4px 8px;
         }
         .project-link{
             position: absolute;

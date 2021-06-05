@@ -10,8 +10,8 @@
         <p class="class">tron comun 6</p>
       </div>
     </div>
-    <div class="container flex">
-      <aside>
+    <div class="container">
+      <div class="flex">
         <div class="contenu">
           <div class="avatar"><img :src="require('@/assets/man2.png')" alt="" srcset="">
           <p>walid oughris</p>
@@ -25,13 +25,19 @@
           <h4>description :</h4>
           <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolorum nam dolorem quo! Iure non magnam animi, dolor rem quos laborum nemo! Odio fugiat totam, minus quae aliquam veritatis saepe eum!</p>
         </div>
-      </aside>
+      </div>
       <div class="project-list">
-        <form method="post">
+        <form method="GET">
           <div class="list">
-            <button  v-for="(project,index) in projectList" :key="index" @click.prevent="select(project.name)" :class="project.active?'active':''">{{project.name}}</button>
+          <div  v-for="(project,index) in projectList" :key="index" @click.prevent >
+           <input type="radio" v-model="test" name="radio" :value="index" :id="`radio${index}`">
+           <label @click="change(index)" :for="`radio${index}`">list {{index}}</label>
           </div>
-          <button @click.prevent="" type="submit">envoyer</button>
+          </div>
+          <hr>
+          <div class="controlter">
+           <button @click.prevent type="submit">envoyer</button>
+          </div>
         </form>
       </div>
     </div>
@@ -42,6 +48,7 @@ export default {
   name:'aboutPage',
   data() {
     return {
+      test:1,
       projectList:[
         {
          name:"list1",
@@ -59,15 +66,8 @@ export default {
     }
   },
   methods:{
-   select(item){
-     console.log(item)
-     for (let index = 0; index < this.projectList.length; index++) {
-        if (this.projectList[index].name==item) {
-          this.projectList[index].active=true;
-       console.log(this.projectList[index].active)
-        }
-        this.projectList[index].active=false;
-     }
+   change(index){
+     this.test=index
    }
   }
 }
@@ -81,7 +81,6 @@ export default {
     text-align: left;
     .header{
       position: relative;
-      box-shadow: #d2d2d2 0px 8px 12px;
       border: .5px solid #ccc;
       border-radius: 1.2rem;
         overflow: hidden;
@@ -127,17 +126,15 @@ export default {
     .container{
       margin-top: 2.5rem;
       padding: 0 3%;
-      &.flex{
+      .flex{
         display: flex;
-        aside{
-          flex: 0 0 20%;
-          margin-right: 3rem;
+         margin-bottom: 2rem;
           .contenu{
-            box-shadow: #d2d2d2 0px 8px 12px;
+            background-color: #1C213E;
             border: .5px solid #ccc;
             border-radius: 1.2rem;
             padding: .25rem 1rem;
-            margin-bottom: 2rem;
+            flex: 0 0 30%;
             .avatar{
               display: flex;
               align-items: center;
@@ -158,13 +155,16 @@ export default {
               p{
               font-size: .9rem;
             }
-            }
+            
+          }
           }
           .description{
-            box-shadow: #d2d2d2 0px 8px 12px;
+            background-color: #1C213E;
             border: .5px solid #ccc;
             border-radius: 1.2rem;
             padding: .25rem 1rem;
+            margin-left:2rem ;
+            flex: 0 0 calc(70% - 2rem);
             h4,p{
                   margin: 0.5rem 0.2rem;
                   font-size: 1rem;
@@ -174,14 +174,47 @@ export default {
             }
           }
         }
-        .project-list{
-          flex: 0 0 calc(80% - 3rem);
-          box-shadow: #d2d2d2 0px 8px 12px;
+        .project-list form{
+          padding: 1.25rem 1rem;
+            background-color: #1C213E;
           border: .5px solid #ccc;
             border-radius: 1.2rem;
-            padding: .25rem 1rem;
+            hr{
+              margin: 1rem 0;
+            }
+            .list{
+              display: flex;
+              justify-content: center;
+              input[type="radio"]{
+                display: none;
+                visibility: hidden;
+                &:checked ~ label{
+                  background: #3D4675 !important;
+                }
+              }
+              label{
+                padding: .5rem 2rem;
+                cursor: pointer;
+                background: #000;
+                color: #fff;
+                display: inline-block;
+                border-radius: 1.25rem;
+                margin: 0 .6rem;
+              }
+            }
+          .controlter{
+            text-align: center;
+            button{
+              outline: none;
+            border: none;
+            background: green;
+            color: #fff;
+            padding: 0.5rem 4rem;
+            border-radius: 1.25rem;
+            }
+          }
         }
-      }
+      
     }
   }
 </style>

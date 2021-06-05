@@ -1,5 +1,8 @@
 <template>
   <div class="home">
+    <div class="new" title="new project">
+      <router-link class="admin-link" tag="div" to="/new/project">+</router-link>
+    </div>
     <div class="contenu">
       <h2>actuel project </h2>
       <div class="container flex">
@@ -22,6 +25,33 @@
 </template>
 
 <style lang="scss" scoped>
+.new{
+position: fixed;
+cursor: pointer;
+bottom: 3rem;
+right: 1rem;
+font-size: 2rem;
+width: 4rem;
+height: 4rem;
+z-index: 99;
+background: #686E9F;
+overflow: hidden;
+border-radius: 50%;
+transition: all .2s ease-in-out;
+&:hover{
+  background: #9098D8;
+}
+.admin-link{
+ display: flex;
+justify-content: center;
+align-items: center;
+position: relative;
+width: 100%;
+height: 100%;
+background: #fff;
+color:#000
+}
+}
   h2{
     padding: .5rem 1rem;
     background: #1C213E;
