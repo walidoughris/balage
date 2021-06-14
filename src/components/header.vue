@@ -2,11 +2,10 @@
     <div class="container">
         <nav class="navbar">
             <router-link class="logo" tag="div" to="/">
-             <img :src="require(`@/assets/logo.jpg`)" alt="" srcset="">
+             CRMOF oujda
             </router-link>
             <ul>
-                 <router-link tag="li" to="/profile">settings</router-link> 
-                 <li><img :src="require(`@/assets/man2.png`)" alt="" srcset=""></li>
+                 <li><img :src="this.$store.state.user.url" alt="" srcset=""></li>
             </ul>
         </nav>
     </div>

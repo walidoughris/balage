@@ -3,19 +3,43 @@
         <form class="imgForm">
           <div class="list">
           <div class="imagesList"  v-for="(img,index) in images" :key="index" @click.prevent >
-           <input type="radio" v-model="image" name="radio" :value="img" :id="`radio${index}`">
+           <input type="radio" v-model="image" name="radio" :value="img.url" :id="`radio${index}`">
            <label @click="activeImg(img)" :for="`radio${index}`">
-               <img :src="require(`./../assets/${img}`)" alt="" srcset="">
+               <img :src="img.url" alt="" srcset="">
            </label>
+          </div>
+          <div>
           </div>
           </div>
           <hr>
           <div class="controlter">
-           <button @click.prevent type="submit">envoyer</button>
+           <button @click.prevent='save()' type="submit">envoyer</button>
           </div>
         </form>
     </div>
 </template>
+<script>
+export default {
+    name:'choseImg',
+    data() {
+      return {
+        loading:false,
+        image:''
+      }
+    },
+    props:['images'],
+    methods:{
+        activeImg(img){
+           this.image=img.url
+            this.$store.state.projectImage=img;
+        },
+        save(){
+          if(this.images)
+           this.$store.state.model=false;
+        }
+    }
+}
+</script>
 <style lang="scss">
     .showImg{
         display: flex;
@@ -76,19 +100,3 @@
         }
     }
 </style>
-<script>
-export default {
-    name:'choseImg',
-    data() {
-        return {
-            image:'',
-            images:['random1.jpg','random2.jpg','random4.jpg','random3.jpg']
-        }
-    },
-    methods:{
-        activeImg(img){
-            this.image=img;
-        }
-    }
-}
-</script>

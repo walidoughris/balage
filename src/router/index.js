@@ -2,9 +2,9 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Project from '../views/Project.vue'
+import ModifyProject from '../views/Modify_project'
 import NewProject from '../views/New_Project.vue'
 import Admin from '../views/Admin.vue'
-import Login from '../views/Login.vue'
 
 Vue.use(VueRouter)
 
@@ -15,14 +15,14 @@ const routes = [
     component: Home
   },
   {
-    path: '/login',
-    name: 'login',
-    component: Login
-  },
-  {
     path: '/project/:id',
     name: 'project',
     component:Project
+  },
+  {
+    path: '/project/modify/:id',
+    name: 'modify_project',
+    component:ModifyProject
   },
   {
     path: '/new/project',

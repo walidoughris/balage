@@ -1,21 +1,28 @@
 <template>
     <div class="card">
-        <router-link tag="div" class="project-link" :to="link(id)" ></router-link>
+        <div class="controllers" v-if="isTeatcher">
+            <div class="btn">
+             <router-link tag="div"  class="modify-link" :to="Modifylink(id)" >modify</router-link>
+             <router-link tag="div"  class="modify-link" :to="Reslink(id)" >show result</router-link>
+            </div>
+        </div>
+        <router-link v-else tag="div" class="project-link" :to="link(id)" ></router-link>
         <div class="card-img">
             <div class="overlay"></div>
             <div class="image">
-                <img :src="require(`@/assets/random3.jpg`)">
+                <img :src="img">
             </div>
             <div class="card-title">
                 <h4 v-text="title" class="title">teatching</h4>
                 <p v-text="prof" class="class">tron comun 6</p>
+                <p v-text="matier" class="professeur">walid oughris</p>
                 <p v-text="classe" class="professeur">walid oughris</p>
             </div>
-            <div class="professeur-img"><img :src="require(`@/assets/man2.png`)" alt="" srcset=""></div>
+            <div class="professeur-img"><img :src="prof_img" alt="" srcset=""></div>
         </div>
         <div class="card-content">
             <h4>date limit</h4>
-            <p v-text="date"></p>
+            <p >{{date}} {{time}}</p>
         </div>
     </div>
 </template>
@@ -26,9 +33,20 @@ export default {
     methods:{
       link:function(id){
           return '/project/'+id;
-      }
+      },
+      Modifylink(id){
+          return '/project/modify/'+id;
+      },
+      Reslink(id){
+          return '/project/resulte/'+id;
+      },
     },
-    props:["date","prof-img","prof","classe","img",'title',"id"]
+    computed:{
+        isTeatcher(){
+            return this.$store.state.user.role=='teatcher';
+        },
+    },
+    props:["date","prof_img","prof","classe","img",'title',"id","time","matier"]
 }
 </script>
 
@@ -42,8 +60,39 @@ export default {
         margin: auto;
         transition: all .3s ease-in;
         position: relative;
+        .controllers{
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            z-index: 9;
+            height: 100%;
+            background: #1C213E;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 1s ease;
+            cursor: default;
+            .btn{
+                .modify-link{
+                    padding: 0.5rem 2rem;
+                    color: white;
+                    border-radius: 3rem;
+                    background: #75757a;
+                    text-align: center;
+                    margin: 1rem;
+                    cursor: pointer;
+                    &:hover{
+                        background: #242A4B;
+                    }
+                }
+            }
+        }
         &:hover{
             box-shadow: #d2d2d2 1px 4px 8px;
+            .controllers{
+                top: 0 !important;
+            }
         }
         .project-link{
             position: absolute;

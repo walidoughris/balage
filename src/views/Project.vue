@@ -3,78 +3,133 @@
     <div class="header">
       <div class="overlay"></div>
       <div class="header-img">
-        <img :src="require('@/assets/random2.jpg')" alt="" srcset="">
+        <img :src="data.img" alt="" srcset="">
       </div>
       <div class="haeder-contenu">
-        <h4 class="title">teatching</h4>
-        <p class="class">tron comun 6</p>
+        <h4 class="title">{{projectInf.title}}</h4>
+        <h4 class="title">{{data.prof.data.matier}}</h4>
+        <p class="class">{{projectInf.classe}}</p>
       </div>
     </div>
     <div class="container">
       <div class="flex">
         <div class="contenu">
-          <div class="avatar"><img :src="require('@/assets/man2.png')" alt="" srcset="">
-          <p>walid oughris</p>
+          <div class="avatar"><img :src="data.prof.url" alt="" srcset="">
+          <p>{{data.prof.data.name}}</p>
           </div>
           <div class="date">
             <h4>date limite :</h4>
-            <p>21 11 27</p>
+            <p>{{projectInf.date}} {{projectInf.time}}</p>
           </div>
         </div>
         <div class="description">
           <h4>description :</h4>
-          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolorum nam dolorem quo! Iure non magnam animi, dolor rem quos laborum nemo! Odio fugiat totam, minus quae aliquam veritatis saepe eum!</p>
+          <p>{{projectInf.description}}</p>
         </div>
       </div>
-      <div class="project-list">
+      <div class="project-list" v-if="!currentproject">
         <form method="GET">
           <div class="list">
-          <div  v-for="(project,index) in projectList" :key="index" @click.prevent >
-           <input type="radio" v-model="test" name="radio" :value="index" :id="`radio${index}`">
-           <label @click="change(index)" :for="`radio${index}`">list {{index}}</label>
+          <div  v-for="(project,index) in projectInf.List" :key="index" @click.prevent >
+           <input type="radio" v-model="selectedProj" name="radio" :value="project.name" :id="`radio${index}`">
+           <label @click="change(project.name)" :class="project.chosed?'disabled-link':''" :for="`radio${index}`">{{project.name}}</label>
           </div>
           </div>
           <hr>
           <div class="controlter">
-           <button @click.prevent type="submit">envoyer</button>
+           <button @click.prevent="submit()" type="submit">envoyer</button>
           </div>
         </form>
       </div>
+      <div class="projectCur" v-else>
+        test4
+      </div>
     </div>
+    <Loader v-if="loaderStart" />
   </div>
 </template>
 <script>
+import firebase from './../firebase/index'
+import Loader from './../components/loader.vue'
+
 export default {
   name:'aboutPage',
   data() {
     return {
-      test:1,
-      projectList:[
-        {
-         name:"list1",
-         active:true
-       },
-       {
-         name:"list2",
-         active:false
-       },
-       {
-         name:"list3",
-         active:false
-       },
-      ]
+       projectInf:"",
+      loaderStart:false,
+      selectedProj:'',
+      data:'',
+      currentproject:'',
+      doc_id:''
     }
   },
+  comments:{
+    Loader
+  },
   methods:{
-   change(index){
-     this.test=index
+   change(name){
+     this.selectedProj=name
+   },
+   submit(){
+     console.log(this.projectInf)
+     let selectedId='';
+     for(let i=0;i<this.projectInf.List.length;i++){
+       if(this.projectInf.List[i].name==this.selectedProj){
+         this.projectInf.List[i].chosed=true;
+         this.projectInf.List[i].studentIds.push(this.$store.state.user.uid);
+         selectedId=i;
+       }
+     }
+     console.log(this.projectInf)
+     firebase.firestore().collection("projects").doc(this.doc_id).update({
+       List:this.projectInf.List
+     })
+     .then(()=>{
+       this.currentproject=this.projectInf.List[selectedId];
+     })
+     .catch(error=>console.log(error));
    }
+  },
+  beforeMount(){
+    this.loaderStart=true;
+    this.doc_id=this.$route.params.id;
+    firebase.firestore().collection("projects").doc(this.doc_id).get()
+    .then((doc)=>{
+      if(!doc.exists){
+        this.$router.push('/')
+      }
+      firebase.firestore().collection('users').doc(doc.data().id).get()
+      .then((user)=>{
+       firebase.storage().ref(user.data().img).getDownloadURL()
+      .then(profUrl=>{
+      firebase.storage().ref(doc.data().img).getDownloadURL()
+      .then(url=>{
+          this.projectInf=doc.data(),
+          this.data={id:doc.id,img:url,prof:{data:user.data(),url:profUrl}}
+          this.selectedProj=this.projectInf.List[0].name;
+          this.projectInf.List.forEach(proj=>{
+            proj.studentIds.forEach(id=>{
+              if(id==this.$store.state.user.uid){
+                this.currentproject=proj;
+              }
+            })
+          })
+      })
+      })
+       .catch(error=>console.log(error))
+      })
+      this.loaderStart=false;
+    })
+    .catch(error=>console.log(error))
   }
 }
 </script>
 <style lang="scss" >
-  .active{
-    background: red;
+  .disabled-link{
+    background: #ddd !important;
+    pointer-events: none;
+    color: #000 !important;
   }
   .project{
     padding: 2% 3%;

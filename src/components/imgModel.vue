@@ -8,12 +8,65 @@
             </div>
             <div class="contenu-show">
                <NewImg v-if="active=='new'" />
-               <ShowImg v-if="active=='show'" />
+               <ShowImg :images="imgs" v-if="active=='show'" />
+               <Loader v-if="loading" />
             </div>
         </div>
         
     </div>
 </template>
+<script>
+import NewImg from './newImg';
+import ShowImg from './showImg';
+import firebase from './../firebase/index';
+import Loader from './loader'
+export default {
+    name:'model',
+    data() {
+        return {
+            active:'show',
+            imgs:[],
+            loading:false
+        }
+    },
+    components:{
+        NewImg,
+        ShowImg,
+        Loader
+    },
+    beforeMount(){
+        this.loading=true;
+        if(this.$store.state.imagesList.length>0){
+        this.imgs=this.$store.state.imagesList;
+        this.loading=false;
+        return;
+      }
+      this.imgs=[];
+      firebase.firestore().collection("images").doc('img').get().then((doc) => {
+                if (doc.exists) {
+                  const storage=firebase.storage();
+                  let randomImg=doc.data().images;
+                  randomImg.forEach(img=>{
+                    storage.ref(img).getDownloadURL()
+                    .then(url=>{
+                        this.imgs.push({url,name:img});
+                    })
+                  })
+                  this.$store.state.imagesList=this.imgs;
+                  this.loading=false;
+                  this.$store.state.model=false
+                } else {
+                    // doc.data() will be undefined in this case
+                    console.log("No such document!");
+                     this.loading=false;
+                }
+            }).catch((error) => {
+                console.log("Error getting document:", error);
+                this.loading=false;
+            });
+    }
+}
+</script>
 <style lang="scss">
     .model{
         position: fixed;
@@ -62,20 +115,3 @@
     }
 </style>
 
-<script>
-import NewImg from './newImg';
-import ShowImg from './showImg';
-
-export default {
-    name:'model',
-    data() {
-        return {
-            active:'show'
-        }
-    },
-    components:{
-        NewImg,
-        ShowImg
-    }
-}
-</script>

@@ -41,7 +41,7 @@
                 <label for="list">project list :</label>
                 <input type="text" @keyup="listProjects()" name="list" id="list" v-model="projects" placeholder="list her separed by ,">
                 <div class="btn-list" >
-                    <button v-for="(project,index) in projectsList" :key="index" v-show="project">{{project}}</button>
+                    <button v-for="(project,index) in projectsList" :key="index" v-show="project">{{project.name}}</button>
                 </div>
             </div>
             <div class="form-control">
@@ -55,7 +55,7 @@
             </div>
             <hr>
             <div class="submit">
-            <button @click.prevent="submitForm()" type="submit">enregitre</button>
+            <button @click.prevent="UpdateForm()" type="submit">modeifie</button>
             </div>
         </form>
         <ImgModel v-if="this.$store.state.model" />
@@ -66,6 +66,7 @@ import ImgModel from './../components/imgModel'
 import firebase from './../firebase/index'
 import Loader from './../components/loader'
 export default {
+    name:'modify_project',
     data() {
         return {
             projectLoad:false,
@@ -78,7 +79,8 @@ export default {
             time:'00:00',
             groube:'individue',
             num_groube:0,
-            classe:''
+            classe:'',
+            doc_id:''
         }
     },
     components:{
@@ -87,6 +89,7 @@ export default {
     },
     methods:{
         listProjects(){
+            this.projectsList=[];
             let List= this.projects.split(',')
             List.forEach(proj=>this.projectsList.push({name:proj,chosed:false}));
     },
@@ -100,9 +103,9 @@ export default {
     open(){
         this.$store.state.model=true
     },
-    submitForm(){
+    UpdateForm(){
            this.projectLoad=true;
-           firebase.firestore().collection('projects').add(
+           firebase.firestore().collection('projects').doc(this.doc_id).update(
             {
             id:this.$store.state.user.uid,
             title:this.title,
@@ -126,15 +129,45 @@ export default {
                 this.time='00:00';
                 this.date='';
                 this.groube='individue';
-                this.projectLoad=false
+                this.projectLoad=false;
+                this.$store.state.projectImage.name='';
+                this.$router.push('/admin');
             })
-            .catch(error=>console.log(error))
+            .catch(error=>{
+                console.log(error);
+                this.projectLoad=false;
+            })
     }
     },
     beforeMount(){
         if(this.$store.state.user)
           this.classe=this.$store.state.user.classes;
-    }
+        this.projectLoad=true;
+        this.doc_id=this.$route.params.id;
+        firebase.firestore().collection("projects").doc(this.doc_id).get()
+            .then((doc)=>{
+                console.log(doc.data())
+            if(doc.exists){
+                this.title=doc.data().title;
+                this.selectedClasse=doc.data().classe;
+                this.description=doc.data().description;
+                this.projectsList=doc.data().List;
+                for(let i=0;i<doc.data().List.length;i++){
+                    if(i==(doc.data().List.length-1))
+                      this.projects+=doc.data().List[i].name;
+                    else
+                     this.projects+=doc.data().List[i].name+',';
+                }
+                this.num_groube=doc.data().num_groube;
+                this.time=doc.data().time;
+                this.date=doc.data().date;
+                this.groube=doc.data().travail;
+                this.$store.state.projectImage.name=doc.data().img
+                this.projectLoad=false;
+            }
+            })
+            .catch(error=>console.log(error))
+        }
 }
 </script>
 <style lang="scss" >

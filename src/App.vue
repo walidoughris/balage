@@ -3,16 +3,19 @@
     <header>
       <Navbar />
     </header>
-    <router-view />
+    <router-view v-if="this.$store.state.autheticated" />
+    <Login v-else />
   </div>
 </template>
 <script> 
 import Navbar from './components/header.vue'
+import Login from './components/login'
 
 export default {
   name:"App",
   components:{
-    Navbar
+    Navbar,
+    Login
   }
 }
 </script>

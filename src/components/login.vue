@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import firebase from './../firebase/index'
+import firebase from '../firebase/index'
 import Loader from './../components/loader'
 
 export default {
@@ -37,30 +37,45 @@ export default {
         login(){
           this.loading=true;
           firebase.auth().signInWithEmailAndPassword(this.user.email,this.user.password)
-          .then(user=>{
+          .then(auth=>{
               //const user = firebase.auth().currentUser;
             const credential = firebase.auth.EmailAuthProvider.credential(
                 this.user.email, 
                 this.user.password
             );
-            firebase.firestore().collection("users").doc(user.uid).get()
-            .then(snapshot=>{
-                console.log(snapshot.docs)
-                snapshot.docs.forEach(doc=>console.log(doc.data()))
-                this.$store.state.credential=credential;
-                this.loading=false;
-            })
-            .catch(err=>{
-                console.log(err);
-                this.loading=false;
-            })
+            const ref=firebase.firestore().collection("users").doc(auth.user.uid);
+            console.log(ref)
+            ref.get().then((doc) => {
+                if (doc.exists) {
+                    firebase.storage().ref(doc.data().img).getDownloadURL()
+                    .then(url=>{
+                    this.$store.state.user=doc.data();
+                    this.$store.state.user.uid=auth.user.uid
+                    this.$store.state.user.url=url;
+                    this.$store.state.credential=credential;
+                    this.$store.state.autheticated=true;
+                    this.loading=false;
+                    console.log(this.$store.state.user);
+                    if(doc.data().role=="teatcher"){
+                        this.$router.push('/admin');
+                    }else{
+                        this.$router.push('/');
+                    }
+                    }).catch(error=>console.log(error))
+                } else {
+                    // doc.data() will be undefined in this case
+                    console.log("No such document!");
+                }
+            }).catch((error) => {
+                console.log("Error getting document:", error);
+            });
             // Now you can use that to reauthenticate
             //user.reauthenticateWithCredential(credential);
           })
-          .catch(console.error(err=>{
-                console.log(err);
+          .catch(error=>{
+                console.log(error);
                 this.loading=false;
-            }))
+            })
         }
     }
 }
