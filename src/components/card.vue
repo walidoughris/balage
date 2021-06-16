@@ -38,7 +38,7 @@ export default {
           return '/project/modify/'+id;
       },
       Reslink(id){
-          return '/project/resulte/'+id;
+          return '/project/resulta/'+id;
       },
     },
     computed:{
