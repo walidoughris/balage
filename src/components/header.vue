@@ -2,7 +2,7 @@
     <div class="container">
         <nav class="navbar">
             <router-link class="logo" tag="div" to="/">
-             CRMOF oujda
+             CRMEFO oujda
             </router-link>
             <ul>
                  <li><img :src="this.$store.state.user.url" alt="" srcset=""></li>

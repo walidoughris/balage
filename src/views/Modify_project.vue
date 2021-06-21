@@ -15,12 +15,12 @@
                 </div>
                 <div>
                 <input type="radio" value="en_groupe" name="en_groube" id="groube" v-model="groube">
-                <label for="groube" @click="show()">en group</label>
+                <label for="groube" @click="show()">en groupe</label>
                 </div>
                 <input type="number" v-if="groube=='en_groupe'" name="num_groups" id="num_g" v-model="num_groube">
             </div>
             <div class="img">
-                <button @click="open()">add image</button>
+                <button @click="open()">ajouter une image</button>
                 <button class="exit" @click="close()" v-if="this.$store.state.model">x</button>
             </div>
             </div>
@@ -38,7 +38,7 @@
             </div>
             </div>
             <div class="form-control">
-                <label for="list">project list :</label>
+                <label for="list">liste de projets :</label>
                 <input type="text" @keyup="listProjects()" name="list" id="list" v-model="projects" placeholder="list her separed by ,">
                 <div class="btn-list" >
                     <button v-for="(project,index) in projectsList" :key="index" v-show="project">{{project.name}}</button>
@@ -55,7 +55,7 @@
             </div>
             <hr>
             <div class="submit">
-            <button @click.prevent="UpdateForm()" type="submit">modeifie</button>
+            <button @click.prevent="UpdateForm()" type="submit">modifier</button>
             </div>
         </form>
         <ImgModel v-if="this.$store.state.model" />

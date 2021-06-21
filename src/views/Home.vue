@@ -8,7 +8,7 @@
       <router-link class="admin-link" tag="div" to="/new/project">+</router-link>
     </div>
     <div class="contenu">
-      <h2 >actuel project </h2>
+      <h2 >projet actuel </h2>
       <div class="container flex">
         <div v-for="(info,index) in projectInf" :key="index" class="col">
           <Card   :date="info.data.date" :id="info.id" :time="info.data.time"
@@ -18,7 +18,7 @@
            />
         </div>
       </div>
-      <h2 v-if="expiredProject.length>0">ecpired projects</h2>
+      <h2 v-if="expiredProject.length>0">projets expirés</h2>
       <div class="container flex">
         <div v-for="(info,index) in expiredProject" :key="index" class="col">
           <Card   :date="info.data.date" :id="info.id" :time="info.data.time"

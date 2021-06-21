@@ -2,8 +2,8 @@
     <div class="card">
         <div class="controllers" v-if="isTeatcher">
             <div class="btn">
-             <router-link tag="div"  class="modify-link" :to="Modifylink(id)" >modify</router-link>
-             <router-link tag="div"  class="modify-link" :to="Reslink(id)" >show result</router-link>
+             <router-link tag="div"  class="modify-link" :to="Modifylink(id)" >modifier</router-link>
+             <router-link tag="div"  class="modify-link" :to="Reslink(id)" >Afficher les résultats</router-link>
             </div>
         </div>
         <router-link v-else tag="div" class="project-link" :to="link(id)" ></router-link>
@@ -13,15 +13,15 @@
                 <img :src="img">
             </div>
             <div class="card-title">
-                <h4 v-text="title" class="title">teatching</h4>
-                <p v-text="prof" class="class">tron comun 6</p>
-                <p v-text="matier" class="professeur">walid oughris</p>
-                <p v-text="classe" class="professeur">walid oughris</p>
+                <h4 v-text="title" class="title"></h4>
+                <p v-text="prof" class="class"></p>
+                <p v-text="matier" class="professeur"></p>
+                <p v-text="classe" class="professeur"></p>
             </div>
             <div class="professeur-img"><img :src="prof_img" alt="" srcset=""></div>
         </div>
         <div class="card-content">
-            <h4>date limit</h4>
+            <h4>date limite</h4>
             <p >{{date}} {{time}}</p>
         </div>
     </div>

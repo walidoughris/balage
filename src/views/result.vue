@@ -21,8 +21,8 @@
         <table>
           <thead>
             <tr>
-              <td>name</td>
-              <td>subject</td>
+              <td>nom et prenom</td>
+              <td>projet</td>
             </tr>
           </thead>
           <tbody>

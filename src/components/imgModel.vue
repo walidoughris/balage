@@ -3,7 +3,7 @@
         <div class="overlay"></div>
         <div class="model-contenu">
             <div class="tabs">
-                <button @click="active='show'" :class="active=='show'?'active':''">choose image</button>
+                <button @click="active='show'" :class="active=='show'?'active':''">choisir l'image</button>
                 <button @click="active='new'" :class="active=='new'?'active':''">upload image</button>
             </div>
             <div class="contenu-show">
